@@ -1,6 +1,5 @@
 import CartModel from "../models/cart.model.js";
 
-
 class CartsRepository {
 	async createCart() {
 		try {
@@ -14,8 +13,8 @@ class CartsRepository {
 
 	async getCartById(cid) {
 		try {
-      const cart = await CartModel.findById(cid);
-      console.log(cart)
+			const cart = await CartModel.findById(cid);
+			console.log(cart);
 			if (!cart) {
 				console.log("No cart with that id");
 				return null;
@@ -24,6 +23,36 @@ class CartsRepository {
 			return cart;
 		} catch (error) {
 			console.log("Error finding cart", error);
+		}
+	}
+
+	async getProductsFromCart(cartId) {
+		try {
+			const cart = await CartModel.findById(cartId);
+			if (!cart) {
+				console.log("No hay carrito con ese ID");
+			}
+			return cart;
+		} catch (error) {}
+	}
+
+	async addProductToCart(cartId, productId, quantity = 1) {
+		try {
+			const cart = await this.getProductsFromCart(cartId);
+			const existeProducto = cart.products.find(
+				(item) => item.product._id.toString() === productId
+			);
+
+			if (existeProducto) {
+				existeProducto.quantity += quantity;
+			} else {
+				cart.products.push({ product: productId, quantity });
+			}
+			cart.markModified("products");
+			await cart.save();
+			return cart;
+		} catch (error) {
+			throw new Error("Error al agregar producto");
 		}
 	}
 
@@ -76,7 +105,7 @@ class CartsRepository {
 		}
 	}
 
-  async deleteCart(cid) {
+	async deleteCart(cid) {
 		try {
 			const cart = await CartModel.findByIdAndUpdate(
 				cid,
@@ -95,7 +124,7 @@ class CartsRepository {
 		}
 	}
 
-  async deleteProductFromCart(cid, pid) {
+	async deleteProductFromCart(cid, pid) {
 		try {
 			const cart = await CartModel.findById(cid);
 
@@ -114,17 +143,6 @@ class CartsRepository {
 			throw error;
 		}
 	}
-
-
-
-
-
-
-
-
-
-
 }
-
 
 export default CartsRepository;

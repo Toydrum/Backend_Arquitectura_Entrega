@@ -4,6 +4,7 @@ import database from "./database.js";
 //Rutes
 import productsRouter from './routers/products.router.js'
 import cartsRouter from'./routers/carts.router.js'; 
+import usersRouter from './routers/users.router.js';
 
 
 
@@ -19,7 +20,8 @@ app.use(express.static( "src/public"));
 
 //Rutes
 app.use("/products", productsRouter);
-app.use("/carts", cartsRouter)
+app.use("/carts", cartsRouter);
+app.use("/users", usersRouter)
 
 
 
