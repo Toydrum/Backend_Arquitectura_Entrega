@@ -1,12 +1,12 @@
 import mongoose from "mongoose";
 
 const userSchema = mongoose.Schema({
-	first_name: {
+	firstname: {
 		type: String,
 		required: true,
 	},
 
-	last_name: {
+	lastname: {
 		type: String,
 		required: true,
 	},
@@ -26,6 +26,11 @@ const userSchema = mongoose.Schema({
 	age: {
 		type: Number,
 		required: true,
+	},
+	rol:{
+		type: String,
+		enum: ["admin", "user"],
+		default: "user"
 	},
 
 	cart: Object

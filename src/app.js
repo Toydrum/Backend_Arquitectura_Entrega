@@ -1,11 +1,16 @@
 import express from "express";
 import database from "./database.js";
+import { engine } from "express-handlebars";
+import cookieParser from "cookie-parser";
+import passport from "passport";
+import initializePassport from "./config/passport.config.js";
+
 
 //Rutes
-import productsRouter from './routers/products.router.js'
+import productsRouter from './routers/products.router.js';
 import cartsRouter from'./routers/carts.router.js'; 
 import usersRouter from './routers/users.router.js';
-
+import viewsRouter from './routers/views.router.js';
 
 
 
@@ -13,15 +18,22 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static( "src/public"));
+app.use(express.static( "./src/public"));
+app.use(cookieParser());
+app.use(passport.initialize());
+initializePassport();
 
-
+//handlebars
+app.engine("handlebars", engine());
+app.set("view engine", "handlebars");
+app.set("views", "./src/views");
 
 
 //Rutes
 app.use("/products", productsRouter);
 app.use("/carts", cartsRouter);
-app.use("/users", usersRouter)
+app.use("/users", usersRouter);
+app.use("/views",viewsRouter)
 
 
 
