@@ -40,23 +40,21 @@ class UserRepository {
 	}
 
 	async logInUser(Obj) {
-    const {email, password} = Obj
+		const { email, password } = Obj;
 		try {
 			const users = await this.getUsers();
-      const currentUser = users.find((item) => item.email === email);
+			const currentUser = users.find((item) => item.email === email);
 			if (!currentUser) {
 				console.log("user not found");
 			}
-      if(isValidPassword(password, currentUser)){
-
-        const token = jwt.sign({ currentUser }, "coderhouse");
-      return token;
-      }
-      return null;
-      
+			if (isValidPassword(password, currentUser)) {
+				const token = jwt.sign({ currentUser }, "coderhouse");
+				return token;
+			}
+			return null;
 		} catch (error) {
-      console.log("error al hacer login")
-    }
+			console.log("error al hacer login");
+		}
 	}
 
 	async getUsers() {
