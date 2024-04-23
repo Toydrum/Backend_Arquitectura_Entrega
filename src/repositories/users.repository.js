@@ -13,7 +13,7 @@ class UserRepository {
 				return;
 			}
 			const users = await this.getUsers();
-			const cart = await cartsRepository.createCart();
+			//const cart = await cartsRepository.createCart();
 			const userExists = users.find((item) => item.email === email);
 
 			if (userExists) {
@@ -25,7 +25,7 @@ class UserRepository {
 				email,
 				password: createHash(password),
 				age,
-				cart,
+				cart: await cartsRepository.createCart(),
 				rol: UserModel.rol,
 			});
 

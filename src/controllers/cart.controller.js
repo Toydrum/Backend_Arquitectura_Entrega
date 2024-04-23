@@ -102,6 +102,17 @@ class CartController {
 			res.status(500).send("Error al vaciar carrito");
 		}
 	}
+
+	async purchaseItem(req, res) {
+		const {cid, uid} = req.params
+		
+		try {
+			const ticket = await cartRepository.createTicket(cid, uid);
+			res.status(200).json(ticket)
+		} catch (error) {
+			res.status(500).send("Error al traer ticket");
+		}
+	}
 }
 
 export default CartController;

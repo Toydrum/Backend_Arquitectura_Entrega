@@ -1,4 +1,5 @@
 import CartModel from "../models/cart.model.js";
+import TicketModel from "../models/ticket.model.js";
 
 class CartsRepository {
 	async createCart() {
@@ -141,6 +142,51 @@ class CartsRepository {
 		} catch (error) {
 			console.error("Error deleting cart", error);
 			throw error;
+		}
+	}
+
+	async createTicket(cid, uid) {
+		try {
+			const cart = await this.getCartById(cid);
+			if (cart && cart.products && cart.products.length > 0) {
+				const products = cart.products;
+				const total = products.reduce((acum, product) => {
+					let price = product.product.price;
+					let quantity = product.quantity;
+					console.log(quantity)
+					if ( quantity > 1) {
+						price = price * quantity;
+						
+					}
+					return acum + price;
+				}, 0);
+
+				const ticket = new TicketModel({
+					code: this.generateRandomHex(5),
+					purchaseDate: new Date(),
+					amount: total,
+					purchaser: uid.toString(),
+				});
+				console.log(ticket);
+				await ticket.save();
+				return ticket;
+			}
+		} catch (error) {
+			//console.error("Error creating ticket", error);
+			//throw error;
+		}
+	}
+
+	generateRandomHex(length) {
+		if (length > 0) {
+			const hexChars = "0123456789ABCDEF";
+			let hex = "";
+			for (let i = 0; i < length; i++) {
+				const randomIndex = Math.floor(Math.random() * hexChars.length);
+				hex += hexChars[randomIndex];
+			}
+			//console.log(hex)
+			return hex;
 		}
 	}
 }
