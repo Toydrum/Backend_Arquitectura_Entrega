@@ -65,6 +65,26 @@ class UserRepository {
 			console.log("Error getting users", error);
 		}
 	}
+
+	async updateUserById(updatedUser, id){
+		try {
+			let user = await UserModel.findByIdAndUpdate(id, updatedUser)
+			//console.log(user);
+			await user.save()
+			return user
+		} catch (error) {
+			
+		}
+	}
+
+	async getUserById(id){
+		try {
+			const user = await UserModel.findById(id)
+			return user
+		} catch (error) {
+			console.log("Error getting users", error);
+		}
+	}
 }
 
 export default UserRepository;

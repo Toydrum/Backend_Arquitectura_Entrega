@@ -39,6 +39,18 @@ class UserController {
       res.status(500).send("Error al obtener usuario");
     }
 	}
+
+	async updateUser(req, res) {
+		const updatedUser = req.body;
+		const id = req.params.uid;
+		console.log(updatedUser)
+		try {
+			const user = await userRepository.updateUserById(updatedUser, id);
+			res.status(200).json(updatedUser);
+		} catch (error) {
+			res.status(500).send("Error al actualizar usuario");
+		}
+	}
 }
 
 export default UserController;

@@ -172,8 +172,8 @@ class CartsRepository {
 				return ticket;
 			}
 		} catch (error) {
-			//console.error("Error creating ticket", error);
-			//throw error;
+			console.error("Error creating ticket", error);
+			throw error;
 		}
 	}
 
