@@ -1,4 +1,7 @@
+import passport from "passport";
 import UserRepository from "../repositories/users.repository.js";
+import { cookieExtractor } from "../config/passport.config.js";
+import { jwtDecode } from "jwt-decode";
 
 const userRepository = new UserRepository();
 
@@ -13,40 +16,72 @@ class UserController {
 				password,
 				age
 			);
+			//console.log(newUser)
 			res.status(200);
 			res.cookie("coderCookieToken", newUser, { httpOnly: true });
-			res.redirect("/views/current");
+			res.redirect(`/users/current`);
 		} catch (error) {
 			res.status(500).send("Error al crear usuario");
 		}
 	}
 
+	async getUserById(req, res) {
+		try {
+			const token = cookieExtractor(req);
+			const payload = jwtDecode(token);
+			const id = payload._id;
+			console.log(payload);
+			console.log(id);
+			const user = await userRepository.getUserById(id);
+
+			if (!user) {
+				throw new Error("no se encontró el usuario");
+			}
+			const products = user.cart?.products
+			? user.cart.products.map((u) => {
+					const { _id, ...rest } = u.product.toObject();
+					//console.log(rest)
+					return rest;
+				})
+			: null;
+			console.log("user controller", products)
+			res.status(200);
+			res.render("current", {
+				user: user,
+				cart: user.cart,
+				cartProducts: products
+			});
+		} catch (error) {
+			res.status(500).send("Error al buscar usuario");
+		}
+	}
+
 	async logInUser(req, res) {
 		const { email, password } = req.body;
-    //console.log(email, password)
+		//console.log(email, password)
 		try {
 			const currentUser = await userRepository.logInUser({ email, password });
-      console.log(currentUser)
-      if(currentUser){
-			res.status(200);
-			res.cookie("coderCookieToken", currentUser, { httpOnly: true });
-			res.redirect("/views/current");
-      } else{
-        
-        res.redirect("/views/login")
-      }
+			//console.log("login user controller",currentUser)
+			if (currentUser) {
+				res.status(200);
+				res.cookie("coderCookieToken", currentUser, { httpOnly: true });
+				//res.render("current")
+				res.redirect("/users/current");
+			} else {
+				res.redirect("/views/login");
+			}
 		} catch (error) {
-      res.status(500).send("Error al obtener usuario");
-    }
+			res.status(500).send("Error al obtener usuario");
+		}
 	}
 
 	async updateUser(req, res) {
 		const updatedUser = req.body;
 		const id = req.params.uid;
-		console.log(updatedUser)
+		console.log(updatedUser);
 		try {
 			const user = await userRepository.updateUserById(updatedUser, id);
-			res.status(200).json(updatedUser);
+			res.status(200).json(user);
 		} catch (error) {
 			res.status(500).send("Error al actualizar usuario");
 		}

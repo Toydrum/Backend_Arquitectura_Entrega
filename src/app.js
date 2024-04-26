@@ -16,6 +16,7 @@ import viewsRouter from './routers/views.router.js';
 
 const app = express();
 
+//middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static( "./src/public"));

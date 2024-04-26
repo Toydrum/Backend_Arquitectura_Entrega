@@ -7,7 +7,7 @@ class ProductsRepository {
             const products = await ProductModel.find();
             return products; 
         } catch (error) {
-            throw new Error("Error al obtener los juguetes");
+            throw new Error("Error al obtener los productos");
         }
     }
   
@@ -44,7 +44,7 @@ class ProductsRepository {
 
         } catch (error) {
             //console.log(error);
-            throw new Error("Error al crear un juguete");
+            throw new Error("Error al crear el producto");
         }
     }
   }

@@ -33,8 +33,18 @@ const userSchema = mongoose.Schema({
 		default: "user"
 	},
 
-	cart: Object
+	cart: {
+		type: mongoose.Schema.Types.ObjectId,
+				ref: "carts",
+				required: true,
+	}
 });
+
+userSchema.pre('findOne', function (next){
+	this.populate(['cart', {path:'cart', populate: {path:'products.product'}}]);
+	
+	next();
+})
 
 const UserModel = mongoose.model("user", userSchema);
 

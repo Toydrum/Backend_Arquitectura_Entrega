@@ -13,11 +13,14 @@ class UserRepository {
 				return;
 			}
 			const users = await this.getUsers();
-			//const cart = await cartsRepository.createCart();
 			const userExists = users.find((item) => item.email === email);
-
+			
 			if (userExists) {
 				console.log("user already exists");
+			}
+			const cart = await cartsRepository.createCart();
+			if(!cart) {
+				throw new Error("no se creo carrito");
 			}
 			const user = new UserModel({
 				firstname,
@@ -25,14 +28,14 @@ class UserRepository {
 				email,
 				password: createHash(password),
 				age,
-				cart: await cartsRepository.createCart(),
+				cart: cart._id,
 				rol: UserModel.rol,
 			});
 
-			//console.log(user)
+			console.log(user);
 
 			await user.save();
-			const token = jwt.sign({ user }, "coderhouse");
+			const token = jwt.sign({ ...user._doc }, "coderhouse");
 			return token;
 		} catch (error) {
 			console.log("error con mongo");
@@ -48,12 +51,12 @@ class UserRepository {
 				console.log("user not found");
 			}
 			if (isValidPassword(password, currentUser)) {
-				const token = jwt.sign({ currentUser }, "coderhouse");
+				const token = jwt.sign( {...currentUser._doc} , "coderhouse");
 				return token;
 			}
 			return null;
 		} catch (error) {
-			console.log("error al hacer login");
+			console.error("error al hacer login", error);
 		}
 	}
 
@@ -80,6 +83,9 @@ class UserRepository {
 	async getUserById(id){
 		try {
 			const user = await UserModel.findById(id)
+			if(!user) {
+				throw new Error("no user found")
+			}
 			return user
 		} catch (error) {
 			console.log("Error getting users", error);
