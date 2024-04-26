@@ -43,14 +43,24 @@ class UserController {
 			if (!user) {
 				throw new Error("no se encontró el usuario");
 			}
-			const rUser = {
+
+			let rUser = {
 				firstname: user.firstname,
 				lastname: user.lastname,
 				email: user.lastname,
 				password: user.password,
 				rol: user.rol,
 				age: user.age,
-				cart: user.cart
+				cart: user.cart,
+				
+			}
+
+			if(user.rol === "user") {
+				rUser = {...rUser, credential: true}
+			}
+
+			if(user.rol === "admin") {
+				rUser = {...rUser, credential2: true}
 			}
 			
 			const products = user.cart?.products

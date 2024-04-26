@@ -1,9 +1,19 @@
 <h1>bienvenido: {{user.firstname}} {{user.lastname}}</h1>
 <h4>Rol: {{user.rol}}</h4>
+{{#if user.credential}}
+  <button><a href="">chat</a></button>
+  <button><a href="/products">store</a></button>
+{{/if}}
+
+{{#if user.credential2}}
+  <button><a href="/views/products">add products</a></button>
+  <button><a href="">update products</a></button>
+{{/if}}
 <ul>
   {{#each cartProducts}}
   <li><h3>{{this.title}}</h3></li>
-  <p>{{this.description}}</p> 
+  <p>{{this.description}}</p>
+  <button>Eliminate</button> 
   {{/each}}
 </ul>
 

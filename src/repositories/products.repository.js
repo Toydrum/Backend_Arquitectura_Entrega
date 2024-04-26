@@ -47,5 +47,16 @@ class ProductsRepository {
             throw new Error("Error al crear el producto");
         }
     }
+
+    async updateProduct(id, productUpdate){
+        try {
+            const product = await ProductModel.findByIdAndUpdate(id, productUpdate);
+            await product.save();
+            return product;
+
+        } catch (error) {
+            throw new Error("Error al actualizar el producto");
+        }
+    }
   }
 export default ProductsRepository;
