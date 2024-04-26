@@ -16,11 +16,17 @@ class UserController {
 				password,
 				age
 			);
-			//console.log(newUser)
-			res.status(200);
+			if(!newUser){
+				console.log("el usuario ya existe")
+				res.send({message: "el usuario ya existe"});
+			} else{
+				res.status(200);
 			res.cookie("coderCookieToken", newUser, { httpOnly: true });
 			res.redirect(`/users/current`);
+			}
+			
 		} catch (error) {
+			
 			res.status(500).send("Error al crear usuario");
 		}
 	}
@@ -30,8 +36,8 @@ class UserController {
 			const token = cookieExtractor(req);
 			const payload = jwtDecode(token);
 			const id = payload._id;
-			console.log(payload);
-			console.log(id);
+			//console.log(payload);
+			//console.log(id);
 			const user = await userRepository.getUserById(id);
 
 			if (!user) {
@@ -44,7 +50,7 @@ class UserController {
 					return rest;
 				})
 			: null;
-			console.log("user controller", products)
+			//console.log("user controller", products)
 			res.status(200);
 			res.render("current", {
 				user: user,

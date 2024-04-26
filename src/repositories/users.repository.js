@@ -14,12 +14,12 @@ class UserRepository {
 			}
 			const users = await this.getUsers();
 			const userExists = users.find((item) => item.email === email);
-			
+
 			if (userExists) {
-				console.log("user already exists");
+				return false;
 			}
 			const cart = await cartsRepository.createCart();
-			if(!cart) {
+			if (!cart) {
 				throw new Error("no se creo carrito");
 			}
 			const user = new UserModel({
@@ -32,13 +32,13 @@ class UserRepository {
 				rol: UserModel.rol,
 			});
 
-			console.log(user);
+			//console.log(user);
 
 			await user.save();
 			const token = jwt.sign({ ...user._doc }, "coderhouse");
 			return token;
 		} catch (error) {
-			console.log("error con mongo");
+			console.log("error con mongo", error);
 		}
 	}
 
@@ -51,7 +51,7 @@ class UserRepository {
 				console.log("user not found");
 			}
 			if (isValidPassword(password, currentUser)) {
-				const token = jwt.sign( {...currentUser._doc} , "coderhouse");
+				const token = jwt.sign({ ...currentUser._doc }, "coderhouse");
 				return token;
 			}
 			return null;
@@ -69,24 +69,22 @@ class UserRepository {
 		}
 	}
 
-	async updateUserById(updatedUser, id){
+	async updateUserById(updatedUser, id) {
 		try {
-			let user = await UserModel.findByIdAndUpdate(id, updatedUser)
+			let user = await UserModel.findByIdAndUpdate(id, updatedUser);
 			//console.log(user);
-			await user.save()
-			return user
-		} catch (error) {
-			
-		}
+			await user.save();
+			return user;
+		} catch (error) {}
 	}
 
-	async getUserById(id){
+	async getUserById(id) {
 		try {
-			const user = await UserModel.findById(id)
-			if(!user) {
-				throw new Error("no user found")
+			const user = await UserModel.findById(id);
+			if (!user) {
+				throw new Error("no user found");
 			}
-			return user
+			return user;
 		} catch (error) {
 			console.log("Error getting users", error);
 		}
