@@ -38,11 +38,21 @@ class UserController {
 			const id = payload._id;
 			//console.log(payload);
 			//console.log(id);
-			const user = await userRepository.getUserById(id);
+			let user = await userRepository.getUserById(id);
 
 			if (!user) {
 				throw new Error("no se encontró el usuario");
 			}
+			const rUser = {
+				firstname: user.firstname,
+				lastname: user.lastname,
+				email: user.lastname,
+				password: user.password,
+				rol: user.rol,
+				age: user.age,
+				cart: user.cart
+			}
+			
 			const products = user.cart?.products
 			? user.cart.products.map((u) => {
 					const { _id, ...rest } = u.product.toObject();
@@ -53,7 +63,7 @@ class UserController {
 			//console.log("user controller", products)
 			res.status(200);
 			res.render("current", {
-				user: user,
+				user: rUser,
 				cart: user.cart,
 				cartProducts: products
 			});
