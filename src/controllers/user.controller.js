@@ -45,14 +45,18 @@ class UserController {
 			}
 
 			let rUser = {
+				_id: user._id,
 				firstname: user.firstname,
 				lastname: user.lastname,
 				email: user.lastname,
 				password: user.password,
 				rol: user.rol,
 				age: user.age,
-				cart: user.cart,
-				
+				cart: [user.cart].map((c) => {
+					const { _v, ...rest } = c.toObject();
+					//console.log(rest)
+					return rest;
+				})[0]
 			}
 
 			if(user.rol === "user") {
@@ -65,19 +69,25 @@ class UserController {
 			
 			const products = user.cart?.products
 			? user.cart.products.map((u) => {
-					const { _id, ...rest } = u.product.toObject();
+					const { _v, ...rest } = u.product.toObject();
 					//console.log(rest)
 					return rest;
 				})
 			: null;
 			//console.log("user controller", products)
+			/* const parsedCart = JSON.parse(JSON.stringify(user.cart).replace(/new Object\(\'/g,''));
+			console.log(parsedCart)
+			const parsedCartId = parsedCart._id.toString();
+			parsedCart._id = parsedCartId
+			rUser.cart = parsedCart;
+			console.log(parsedCart._id) */
 			res.status(200);
 			res.render("current", {
 				user: rUser,
-				cart: user.cart,
 				cartProducts: products
 			});
 		} catch (error) {
+			console.error(error)
 			res.status(500).send("Error al buscar usuario");
 		}
 	}

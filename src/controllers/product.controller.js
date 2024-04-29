@@ -43,6 +43,10 @@ class ProductController {
 			res.status(500).json("Error del servidor wiii");
 		}
 	}
+
+	async updateProduct(req, res) {
+		
+	}
 }
 
 export default ProductController;

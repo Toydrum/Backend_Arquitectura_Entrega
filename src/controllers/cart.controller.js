@@ -1,4 +1,6 @@
 import CartsRepository from "../repositories/carts.repository.js";
+import UserRepository from "../repositories/users.repository.js";
+const userRepository= new UserRepository();
 const cartRepository = new CartsRepository();
 
 class CartController {
@@ -104,12 +106,40 @@ class CartController {
 	}
 
 	async purchaseItem(req, res) {
-		const {cid, uid} = req.params
 		
 		try {
-			const ticket = await cartRepository.createTicket(cid, uid);
-			res.status(200).json(ticket)
+			
+			const {cid, uid} = req.params
+			const user = await userRepository.getUserById(uid);
+			if(!user) throw new Error("no se encontró al usuario");
+			const rUser = [user].map((u)=>{
+				const { _v, ...rest } = u.toObject();
+					//console.log(rest)
+					u.cart = [u.cart].map((c) => {
+						const { _v, ...rest } = c.toObject();
+						//console.log(rest)
+						return rest;
+					})[0]
+					return rest;
+			})[0]
+			const ticketInfo = await cartRepository.createTicket(cid, uid);
+			if(!ticketInfo){
+				throw new Error("no se guardo bien la info del ticket");
+			}
+			res.status(200);
+			res.render("current", {
+				user: rUser,
+				cartProducts: ticketInfo.notInstockProducts.map((p)=>{
+					p.message = "No hay suficiente stock";
+					const { _v, ...rest } = p.toObject();
+					//console.log(rest)
+					return rest;
+					
+				}),
+				ticketInfo: ticketInfo.savedTicket
+			});
 		} catch (error) {
+			console.error(error)
 			res.status(500).send("Error al traer ticket");
 		}
 	}

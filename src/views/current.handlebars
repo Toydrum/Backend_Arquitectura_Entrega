@@ -14,8 +14,15 @@
   <li><h3>{{this.title}}</h3></li>
   <p>{{this.description}}</p>
   <button>Eliminate</button> 
+  {{#if this.message}}
+  <p style="color: red;">{{this.message}}</p>
+  {{/if}}
   {{/each}}
 </ul>
+{{#if ticketInfo}}
+  <h3>esta es la info de su compra,{{ticketInfo}}</h3>
+  {{/if}}
+<button ><a href="/carts/{{user.cart._id}}/purchase/{{user._id}}">comprar</a></button>
 
 
 <form action="/logout">

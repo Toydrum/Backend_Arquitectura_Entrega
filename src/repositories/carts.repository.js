@@ -1,5 +1,8 @@
 import CartModel from "../models/cart.model.js";
+import ProductModel from "../models/product.model.js";
 import TicketModel from "../models/ticket.model.js";
+import ProductsRepository from "./products.repository.js";
+const productsRepository = new ProductsRepository();
 
 class CartsRepository {
 	async createCart() {
@@ -15,7 +18,7 @@ class CartsRepository {
 	async getCartById(cid) {
 		try {
 			const cart = await CartModel.findById(cid);
-			console.log(cart);
+			//console.log(cart);
 			if (!cart) {
 				console.log("No cart with that id");
 				return null;
@@ -148,12 +151,27 @@ class CartsRepository {
 	async createTicket(cid, uid) {
 		try {
 			const cart = await this.getCartById(cid);
+			//console.log(cart)
 			if (cart && cart.products && cart.products.length > 0) {
-				const products = cart.products;
+				// filtrar los productos que tengan suficiente stock
+				//let quantity = cart.products.quantity;
+				const notInstockProducts = [];
+				const products = cart.products.filter((p)=>{
+					console.log("p:",p)
+					if (p.product.stock >= p.quantity) {
+						return true;
+					} else {
+						notInstockProducts.push(p)
+						return false;
+					}
+				});
+					console.log("not in stock products", notInstockProducts)
+					console.log("products", products)
+					
 				const total = products.reduce((acum, product) => {
 					let price = product.product.price;
-					let quantity = product.quantity;
-					console.log(quantity)
+					let quantity = product.quantity
+					console.log(price);
 					if ( quantity > 1) {
 						price = price * quantity;
 						
@@ -167,9 +185,17 @@ class CartsRepository {
 					amount: total,
 					purchaser: uid.toString(),
 				});
-				console.log(ticket);
-				await ticket.save();
-				return ticket;
+				const savedTicket = await ticket.save();
+				if (!savedTicket) throw new Error("No se guardó el ticket")
+				// guardar el nuevo stock de los productos
+			products.forEach(async (p)=>{
+				p.product.stock = p.product.stock - p.quantity;
+				const productEdited = await productsRepository.updateProduct(p.product._id, p.product);
+				if(!productEdited) throw new Error("no se actualizó el stock del producto" + p.product._id)
+			})
+				return {
+			notInstockProducts,
+			savedTicket};
 			}
 		} catch (error) {
 			console.error("Error creating ticket", error);
