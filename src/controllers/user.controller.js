@@ -1,4 +1,7 @@
-import passport from "passport";
+import { EErrors } from "../services/errors/enums.js";
+import CustomError from "../services/errors/customError.js";
+import generarInfoError from "../services/errors/info.js";
+
 import UserRepository from "../repositories/users.repository.js";
 import { cookieExtractor } from "../config/passport.config.js";
 import { jwtDecode } from "jwt-decode";
@@ -16,17 +19,15 @@ class UserController {
 				password,
 				age
 			);
-			if(!newUser){
-				console.log("el usuario ya existe")
-				res.send({message: "el usuario ya existe"});
-			} else{
+			if (!newUser) {
+				console.log("el usuario ya existe");
+				res.send({ message: "el usuario ya existe" });
+			} else {
 				res.status(200);
-			res.cookie("coderCookieToken", newUser, { httpOnly: true });
-			res.redirect(`/users/current`);
+				res.cookie("coderCookieToken", newUser, { httpOnly: true });
+				res.redirect(`/users/current`);
 			}
-			
 		} catch (error) {
-			
 			res.status(500).send("Error al crear usuario");
 		}
 	}
@@ -56,24 +57,24 @@ class UserController {
 					const { _v, ...rest } = c.toObject();
 					//console.log(rest)
 					return rest;
-				})[0]
+				})[0],
+			};
+
+			if (user.rol === "user") {
+				rUser = { ...rUser, credential: true };
 			}
 
-			if(user.rol === "user") {
-				rUser = {...rUser, credential: true}
+			if (user.rol === "admin") {
+				rUser = { ...rUser, credential2: true };
 			}
 
-			if(user.rol === "admin") {
-				rUser = {...rUser, credential2: true}
-			}
-			
 			const products = user.cart?.products
-			? user.cart.products.map((u) => {
-					const { _v, ...rest } = u.product.toObject();
-					//console.log(rest)
-					return rest;
-				})
-			: null;
+				? user.cart.products.map((u) => {
+						const { _v, ...rest } = u.product.toObject();
+						//console.log(rest)
+						return rest;
+				  })
+				: null;
 			//console.log("user controller", products)
 			/* const parsedCart = JSON.parse(JSON.stringify(user.cart).replace(/new Object\(\'/g,''));
 			console.log(parsedCart)
@@ -84,18 +85,18 @@ class UserController {
 			res.status(200);
 			res.render("current", {
 				user: rUser,
-				cartProducts: products
+				cartProducts: products,
 			});
 		} catch (error) {
-			console.error(error)
+			console.error(error);
 			res.status(500).send("Error al buscar usuario");
 		}
 	}
 
-	async logInUser(req, res) {
-		const { email, password } = req.body;
-		//console.log(email, password)
+	async logInUser(req, res, next) {
 		try {
+			const { email, password } = req.body;
+
 			const currentUser = await userRepository.logInUser({ email, password });
 			//console.log("login user controller",currentUser)
 			if (currentUser) {
@@ -104,10 +105,15 @@ class UserController {
 				//res.render("current")
 				res.redirect("/users/current");
 			} else {
-				res.redirect("/views/login");
+				throw CustomError.createError({
+					name: "error",
+					cause: generarInfoError({ email, password }),
+					message: "error al intentar hacer login",
+					code: EErrors.TYPE_INVALID,
+				});
 			}
 		} catch (error) {
-			res.status(500).send("Error al obtener usuario");
+			next(error);
 		}
 	}
 

@@ -4,6 +4,7 @@ import { engine } from "express-handlebars";
 import cookieParser from "cookie-parser";
 import passport from "passport";
 import initializePassport from "./config/passport.config.js";
+import manejadorErrores from "./middleware/error.js";
 
 
 //Rutes
@@ -36,6 +37,8 @@ app.use("/carts", cartsRouter);
 app.use("/users", usersRouter);
 app.use("/views",viewsRouter)
 
+//middleware para errores
+app.use(manejadorErrores);
 
 
 
