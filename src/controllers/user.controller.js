@@ -1,10 +1,12 @@
 import { EErrors } from "../services/errors/enums.js";
 import CustomError from "../services/errors/customError.js";
 import generarInfoError from "../services/errors/info.js";
+import tokenCreator from "../utils/tokenCreator.js";
 
 import UserRepository from "../repositories/users.repository.js";
 import { cookieExtractor } from "../config/passport.config.js";
 import { jwtDecode } from "jwt-decode";
+import UserModel from "../models/user.model.js";
 
 const userRepository = new UserRepository();
 
@@ -126,6 +128,29 @@ class UserController {
 			res.status(200).json(user);
 		} catch (error) {
 			res.status(500).send("Error al actualizar usuario");
+		}
+	}
+
+	async requestPasswordReset(req, res) {
+		const { email } = req.body;
+		try {
+			const user = await UserModel.findOne({email})
+
+			if(!user){
+				return res.status(404).send("User not found")
+			}
+			const token = tokenCreator();
+			user.reserToken = {
+				token: token,
+				expire: newDate(Date.now() + 3600000)
+			}
+			await user.save();
+
+
+
+		} catch (error) {
+
+			
 		}
 	}
 }

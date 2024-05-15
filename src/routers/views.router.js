@@ -1,11 +1,14 @@
 import express from 'express';
-import passport from 'passport';
+import ViewsController from '../controllers/views.controller.js';
 import UserRepository from '../repositories/users.repository.js';
 import generarUProductos from '../utils/faker.js';
+import UserController from '../controllers/user.controller.js';
+const userController = new UserController();
+const viewsController = new ViewsController();
 
 
 
-const userRepository = new UserRepository();
+//const userRepository = new UserRepository();
 const router = express.Router();
 
 
@@ -35,5 +38,17 @@ router.get("/mokingproducts", (req,res)=>{
   res.render("mockingProducts", {products: products});
 })
 
+router.get("/loggertest", (req,res)=>{
+  req.logger.fatal("x_x");
+  req.logger.error("error");
+  req.logger.warning("warning, check your code");
+  req.logger.info("no errors detected");
+  req.logger.http("ruta"); 
+
+  res.send("Logs generated")
+})
+
+router.get("/reset-password", viewsController.renderResetPassword)
+router.post("/requestPasswordReset", userController.requestPasswordReset)
 
 export default router;

@@ -9,7 +9,8 @@ dotenv.config({
 });
 
 const configObject = {
-  mongo_url: process.env.MONGO_URL
+  //mongo_url: process.env.MONGO_URL,
+  level: process.env.LEVEL
 }
 
 export default configObject;
