@@ -89,6 +89,26 @@ class UserRepository {
 			console.log("Error getting users", error);
 		}
 	}
+
+	async changePassword(email, password, token) {
+		try {
+			const user = await UserModel.findOne({ email });
+			if (!user) {
+				throw new Error("no user found");
+			}
+			if (user.resetToken.expire < new Date()) {
+				throw new Error("token expired");
+			}
+			if (user.resetToken.token !== token) {
+				throw new Error("invalid token");
+			}
+			user.password = createHash(password);
+			await user.save();
+			return user;
+		} catch (error) {
+			console.log("Error getting users", error);
+		}
+	}
 }
 
 export default UserRepository;

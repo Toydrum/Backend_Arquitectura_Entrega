@@ -2,7 +2,7 @@ import { EErrors } from "../services/errors/enums.js";
 import CustomError from "../services/errors/customError.js";
 import generarInfoError from "../services/errors/info.js";
 import tokenCreator from "../utils/tokenCreator.js";
-
+import EmailManager from "../services/emailManager.js";
 import UserRepository from "../repositories/users.repository.js";
 import { cookieExtractor } from "../config/passport.config.js";
 import { jwtDecode } from "jwt-decode";
@@ -135,21 +135,62 @@ class UserController {
 		const { email } = req.body;
 		try {
 			const user = await UserModel.findOne({email})
-
 			if(!user){
 				return res.status(404).send("User not found")
 			}
 			const token = tokenCreator();
-			user.reserToken = {
+			user.resetToken = {
 				token: token,
-				expire: newDate(Date.now() + 3600000)
+				expire: new Date(Date.now() + 3600000)
 			}
+			const emailManager = new EmailManager();
+			
+			await emailManager.restEmail(email, user.firstname, token);
+
 			await user.save();
 
+			res.redirect("/views/confirmation");
+
+		} catch (error) {
+			console.error(error);
+			res.status(500).send("Error al solicitar cambio de contraseña");
+
+		}
+	}
+
+	async changePassword(req, res){
+		try {
+			const {email, password, token} = req.body;
+			
+			
+			const user = await userRepository.changePassword(email, password, token);
+			if(!user){
+				return res.status(404).send("User not found")
+			}
+			res.redirect("/views/login");
 
 
 		} catch (error) {
+			console.error(error);
+			res.status(500).send("Error al cambiar contraseña");
+		}
+	}
 
+	async changeRollPremium(req, res) {
+		try {
+			const {uid} = req.params;
+			const user = await UserModel.findById(uid)
+			if(!user) {
+				return res.status(404).send("User not found")
+			}
+
+			const newRoll = user.role === "user"? "premium" : "user"
+
+			const actualized = await UserModel.findByIdAndUpdate(uid, {rol: newRoll})
+
+			return actualized;
+
+		} catch (error) {
 			
 		}
 	}

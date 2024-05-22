@@ -1,6 +1,6 @@
 import express from 'express';
 import ViewsController from '../controllers/views.controller.js';
-import UserRepository from '../repositories/users.repository.js';
+
 import generarUProductos from '../utils/faker.js';
 import UserController from '../controllers/user.controller.js';
 const userController = new UserController();
@@ -48,7 +48,13 @@ router.get("/loggertest", (req,res)=>{
   res.send("Logs generated")
 })
 
-router.get("/reset-password", viewsController.renderResetPassword)
-router.post("/requestPasswordReset", userController.requestPasswordReset)
+router.get("/reset-password", viewsController.renderResetPassword);
+router.get('/confirmation', (req,res)=>{
+  res.render('sendConfirmation')
+})
+router.get("/change-password/:token?", (req,res)=>{
+  res.render("passwordChange")
+})
+
 
 export default router;

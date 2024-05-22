@@ -7,9 +7,10 @@ const router = express.Router();
 
 router.post("/", userController.createUser);
 router.post("/login", userController.logInUser);
-//router.put("/:uid", userController.updateUser);
+router.put("/:uid", userController.updateUser);
 router.get("/current", passport.authenticate("jwt", {session: false}), userController.getUserById)
-
+router.post("/requestPasswordReset", userController.requestPasswordReset)
+router.post("/reset-password", userController.changePassword);
 
 
 export default router;
