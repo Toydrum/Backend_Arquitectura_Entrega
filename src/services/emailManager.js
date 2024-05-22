@@ -3,16 +3,16 @@ import nodemailer from "nodemailer";
 class EmailManager {
 	constructor() {
 		this.transporter = nodemailer.createTransport({
-			service: "gmail", // use 'gmail' or your preferred email service
+			service: "gmail",
 			auth: {
-				user: "hm.covar@gmail.com", // replace with your email
-				pass: "sjlm czgq nzlf cpkh", // replace with your password
+				user: "hm.covar@gmail.com",
+				pass: "sjlm czgq nzlf cpkh",
 			},
 		});
 	}
 
 	async restEmail(email, firstname, token) {
-		console.log(email);
+		
 		try {
 			const mailOptions = {
 				from: "Ecommerce <hm.covar@gmail.com>",
