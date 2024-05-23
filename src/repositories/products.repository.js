@@ -11,7 +11,7 @@ class ProductsRepository {
         }
     }
   
-    async createProduct({ title, description, price, img, code, stock, category, thumbnails }) {
+    async createProduct({ title, description, price, img, code, stock, category, thumbnails, owner }) {
         try {
            // const productDTO = new JugueteDTO(productoData);
             if (!title || !description || !price || !code || !stock || !category) {
@@ -24,7 +24,7 @@ class ProductsRepository {
                 console.log("El código debe ser único");
                 return;
             }
-            
+            console.log(owner)
             const newProduct = new ProductModel({
                 title,
                 description,
@@ -34,6 +34,7 @@ class ProductsRepository {
                 stock,
                 category,
                 status: true,
+                owner: owner,
                 thumbnails: thumbnails || []
             });
             

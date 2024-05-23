@@ -18,7 +18,7 @@ class CartsRepository {
 	async getCartById(cid) {
 		try {
 			const cart = await CartModel.findById(cid);
-			//console.log(cart);
+			
 			if (!cart) {
 				console.log("No cart with that id");
 				return null;

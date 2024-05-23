@@ -161,8 +161,9 @@ class UserController {
 	async changePassword(req, res){
 		try {
 			const {email, password, token} = req.body;
-			
-			
+			if(token.expire < Date.now()){
+				res.redirect("/views/reset-password");
+			}
 			const user = await userRepository.changePassword(email, password, token);
 			if(!user){
 				return res.status(404).send("User not found")
@@ -194,6 +195,13 @@ class UserController {
 			
 		}
 	}
+
+	async logOutUser(req, res) {
+		res.clearCookie("coderCookieToken");
+		res.redirect("/views/login");
+	}
+
+
 }
 
 export default UserController;

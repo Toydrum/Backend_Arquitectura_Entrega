@@ -1,6 +1,6 @@
 import UserModel from "../models/user.model.js";
 import CartsRepository from "./carts.repository.js";
-//import passport from "passport";
+
 import jwt from "jsonwebtoken";
 import { createHash, isValidPassword } from "../utils/hashbcrypt.js";
 const cartsRepository = new CartsRepository();
@@ -18,6 +18,14 @@ class UserRepository {
 			if (userExists) {
 				return false;
 			}
+
+			let rol = "user";
+			if (email.endsWith("admin.com")) {
+				rol = "admin";
+			} else if (email.endsWith("premium.com")) {
+				rol = "premium";
+			}
+
 			const cart = await cartsRepository.createCart();
 			if (!cart) {
 				throw new Error("no se creo carrito");
@@ -29,7 +37,7 @@ class UserRepository {
 				password: createHash(password),
 				age,
 				cart: cart._id,
-				rol: UserModel.rol,
+				rol,
 			});
 
 			//console.log(user);
@@ -96,9 +104,7 @@ class UserRepository {
 			if (!user) {
 				throw new Error("no user found");
 			}
-			if (user.resetToken.expire < new Date()) {
-				throw new Error("token expired");
-			}
+
 			if (user.resetToken.token !== token) {
 				throw new Error("invalid token");
 			}
@@ -107,6 +113,12 @@ class UserRepository {
 			return user;
 		} catch (error) {
 			console.log("Error getting users", error);
+		}
+	}
+
+	endsWith(str) {
+		if (email.includes(str)) {
+			return true;
 		}
 	}
 }

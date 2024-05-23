@@ -33,10 +33,20 @@ const productsSchema = new Schema({
 		type: Boolean,
 		required: true,
 	},
+	owner: {
+		type: Schema.Types.ObjectId,
+		ref: "user",
+		default: 'admin',
+	},
 	thumbnails: {
 		type: [String],
 	},
 });
+
+productsSchema.pre('findOne', function (next){
+	this.populate('owner');
+	next();
+})
 
 productsSchema.plugin(mongoosePaginate);
 

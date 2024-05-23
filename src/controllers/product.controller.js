@@ -31,11 +31,13 @@ class ProductController {
 	}
 
 	async postProducts(req, res) {
-		const nuevoProducto = req.body;
-		console.log(nuevoProducto)
 		try {
-			//console.log(nuevoProducto);
-			await productRepository.createProduct(nuevoProducto);
+			let nuevoProducto = req.body;
+			nuevoProducto.owner = req.user;
+			
+			//console.log(nuevoProducto)
+		const created =	await productRepository.createProduct(nuevoProducto);
+		console.log(created)
 			res.status(200)
 			res.redirect("/products")
 			//res.render("realTimeProducts")
