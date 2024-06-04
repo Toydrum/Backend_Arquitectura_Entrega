@@ -1,0 +1,26 @@
+paths:
+  /products:
+    get:
+      summary: Get all products
+      tags:
+        - Products
+      responses:
+        '200':
+          description: All products
+        '500':
+          description: 'Internal server error'
+    post:
+      summary: Create a product
+      tags:
+        - Products
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        '201':
+          description: Product created
+        '500':
+          description: 'Internal server error'      

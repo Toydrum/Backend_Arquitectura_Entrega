@@ -1,0 +1,220 @@
+paths:
+  /carts/{cid}:
+    get:
+      summary: Get cart by ID
+      tags:
+        - Carts
+      parameters:
+        - in: path
+          name: cid
+          required: true
+          schema:
+            type: string
+          description: Cart ID
+      responses:
+        '200':
+          description: Cart by ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        '500':
+          description: 'Internal server error'
+
+    delete:
+      summary: Delete cart by ID
+      tags:
+        - Carts
+      parameters:
+        - in: path
+          name: cid
+          required: true
+          schema:
+            type: string
+          description: Cart ID
+      responses:
+        '200':
+          description: Cart by ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        '500':
+          description: 'Internal server error'
+    put:
+      summary: Update cart by ID
+      tags:
+        - Carts
+      parameters:
+        - in: path
+          name: cid
+          required: true
+          schema:
+            type: string
+          description: Cart ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Cart'
+      responses:
+        '200':
+          description: Cart by ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        '500':
+          description: 'Internal server error'      
+
+  /carts/{cid}/product/{pid}:
+    post:
+      summary: Add product to cart
+      tags:
+        - Carts
+      parameters:
+        - in: path
+          name: cid
+          required: true
+          schema:
+            type: string
+          description: Cart ID
+        - in: path
+          name: pid
+          required: true
+          schema:
+            type: string
+          description: Product ID
+      responses:
+        '201':
+          description: Cart by ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        '500':
+          description: 'Internal server error'
+    delete:
+      summary: Remove product from cart
+      tags:
+        - Carts
+      parameters:
+        - in: path
+          name: cid
+          required: true
+          schema:
+            type: string
+          description: Cart ID
+        - in: path
+          name: pid
+          required: true
+          schema:
+            type: string
+          description: Product ID
+      responses:
+        '200':
+          description: Cart by ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        '500':
+          description: 'Internal server error'  
+
+    put:
+      summary: Update product in cart
+      tags:
+        - Carts
+      parameters:
+        - in: path
+          name: cid
+          required: true
+          schema:
+            type: string
+          description: Cart ID
+        - in: path
+          name: pid
+          required: true
+          schema:
+            type: string
+          description: Product ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Cart'
+      responses:
+        '200':
+          description: Cart by ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        '500':
+          description: 'Internal server error'
+  /carts/{cid}/purchase/{uid}:
+    get:
+      summary: Purchase cart
+      tags:
+        - Carts
+      parameters:
+        - in: path
+          name: cid
+          required: true
+          schema:
+            type: string
+          description: Cart ID
+        - in: path
+          name: uid
+          required: true
+          schema:
+            type: string
+          description: User ID
+      responses:
+        '200':
+          description: Cart by ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        '500':
+          description: 'Internal server error'                  
+
+components:
+  schemas:
+    Cart:
+      type: object
+      properties:
+        _id:
+          type: ObjectId
+          description: Cart ID
+        products:
+          type: array
+          items:
+            type: object
+            properties:
+              _id:
+                type: ObjectId
+                description: Product ID
+              name:
+                type: string
+              price:
+                type: number
+              quantity:
+                type: number
+        total:
+          type: number
+      example:
+        _id: ObjectId("5f7b1b7b4f3c4b001f")
+        products:
+          - _id: ObjectId("5f7b1b7b4f3c4b001f")
+            name: Product 1
+            price: 100
+            quantity: 2
+          - _id: ObjectId("5f7b1b7b4f3c4b002f")
+            name: Product 2
+            price: 200
+            quantity: 1
+        total: 300

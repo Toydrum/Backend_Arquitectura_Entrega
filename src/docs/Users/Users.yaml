@@ -1,0 +1,41 @@
+paths:
+  /users/current:
+    get:
+      summary: Get current user
+      tags:
+        - Users
+      responses:
+        '200':
+          description: Current user
+        '500':
+          description: 'Internal server error'
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        _id:
+          type: ObjectId
+          description: User ID
+        firstname:
+          type: string
+        lastname:
+          type: string  
+        email:
+          type: string
+          format: email
+        password:
+          type: string  
+        role:
+          type: string
+          enum:
+            - admin
+            - user  
+      example:
+        _id: ObjectId("5f7b1b7b4f3c4b001f")
+        firstname: John
+        lastname: Doe
+        email: jo@mail.com
+        password: 123456
+        role: user            
+
