@@ -34,6 +34,21 @@ class UserController {
 		}
 	}
 
+	async getAllUsers(req, res) {
+		try {
+			const allUsersF = await userRepository.getUsers();
+			allUsersF.map((u) => {
+				const { _v, ...rest } = u.toObject();
+				//console.log(rest)
+				return rest;
+			});
+			res.status(200)
+			res.render("users", { users: allUsers });
+		} catch (error) {
+			
+		}
+	}
+
 	async getUserById(req, res) {
 		try {
 			const token = cookieExtractor(req);
