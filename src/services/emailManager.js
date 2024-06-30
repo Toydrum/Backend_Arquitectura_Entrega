@@ -6,8 +6,9 @@ class EmailManager {
 			service: "gmail",
 			auth: {
 				user: "hm.covar@gmail.com",
-				pass: "sjlm czgq nzlf cpkh",
+				pass: "ujxi pitx yijf pgqi",
 			},
+			tls: {rejectUnauthorized: false}
 		});
 	}
 
