@@ -16,17 +16,13 @@ router.get("/login", (req, res) =>{
   res.render("login")
 })
 
-
 router.get("/register", (req, res)=>{
   res.render("register");
 })
 
-
-
 router.get("/products", (req, res) =>{
   res.render("realTimeProducts")
 })
-
 
 router.get("/mokingproducts", (req,res)=>{
   const products = [];
@@ -49,9 +45,12 @@ router.get("/loggertest", (req,res)=>{
 })
 
 router.get("/reset-password", viewsController.renderResetPassword);
+
+
 router.get('/confirmation', (req,res)=>{
   res.render('sendConfirmation')
 })
+
 router.get("/change-password/:token?", (req,res)=>{
   res.render("passwordChange")
 })

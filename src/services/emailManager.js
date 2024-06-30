@@ -30,6 +30,19 @@ class EmailManager {
 			console.error(error);
 		}
 	}
-}
 
+	async sendEmail(email, subject, message) {
+		try {
+			const mailOptions = {
+				from: "Ecommerce <hm.covar@gmail.com>",
+				to: email,
+				subject: subject,
+				html: message,
+			};
+			await this.transporter.sendMail(mailOptions);
+		} catch (error) {
+			console.error("error enviando email",error);
+		}
+	}
+}
 export default EmailManager;

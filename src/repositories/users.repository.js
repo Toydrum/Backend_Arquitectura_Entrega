@@ -116,6 +116,19 @@ class UserRepository {
 		}
 	}
 
+	async deleteUserById(id) {
+		try {
+			const user =
+			await UserModel.findByIdAndDelete(id);
+			return user;
+
+
+			
+		} catch (error) {
+			throw new Error("couldn't delete user");
+		}
+	}
+
 	endsWith(str) {
 		if (email.includes(str)) {
 			return true;

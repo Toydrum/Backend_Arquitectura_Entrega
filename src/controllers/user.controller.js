@@ -7,6 +7,8 @@ import UserRepository from "../repositories/users.repository.js";
 import { cookieExtractor } from "../config/passport.config.js";
 import { jwtDecode } from "jwt-decode";
 import UserModel from "../models/user.model.js";
+import { get } from "mongoose";
+import { th } from "@faker-js/faker";
 
 const userRepository = new UserRepository();
 
@@ -37,13 +39,13 @@ class UserController {
 	async getAllUsers(req, res) {
 		try {
 			const allUsersF = await userRepository.getUsers();
-			allUsersF.map((u) => {
+			const allUsers = allUsersF.map((u) => {
 				const { _v, ...rest } = u.toObject();
-				//console.log(rest)
+				console.log(rest)
 				return rest;
 			});
 			res.status(200)
-			res.render("users", { users: allUsers });
+			res.render("users", { users: allUsers }); 
 		} catch (error) {
 			
 		}
@@ -90,15 +92,9 @@ class UserController {
 						const { _v, ...rest } = u.product.toObject();
 						//console.log(rest)
 						return rest;
-				  })
+				})
 				: null;
-			//console.log("user controller", products)
-			/* const parsedCart = JSON.parse(JSON.stringify(user.cart).replace(/new Object\(\'/g,''));
-			console.log(parsedCart)
-			const parsedCartId = parsedCart._id.toString();
-			parsedCart._id = parsedCartId
-			rUser.cart = parsedCart;
-			console.log(parsedCart._id) */
+		
 			res.status(200);
 			res.render("current", {
 				user: rUser,
@@ -216,7 +212,37 @@ class UserController {
 		res.redirect("/views/login");
 	}
 
+	async renderMasterView(req, res) {
+		try {
+			const getUsers = await userRepository.getUsers();
+			const users = getUsers.map((u) => {
+				const { _v, ...rest } = u.toObject();
+				//console.log(rest)
+				return rest;
+			});
+			res.render("masterView", { users: users });
+		} catch (error) {
+			throw new Error("Error al renderizar la vista");
+		}
+	}
 
+	async deleteUser(req, res) {
+		try {
+			const {uid} = req.params;
+			
+			const user = await userRepository.getUserById(uid);
+
+			if(!user){
+				return res.status(404).send("User not found")
+			}
+			const emailManager = new EmailManager();
+			await emailManager.sendEmail(user.email, user.firstname+user.lastname, "Esperamos verte pronto");
+			const deletedUser = await userRepository.deleteUserById(uid);
+			res.status(200).send(deletedUser);
+			return deletedUser;
+		} catch (error) {
+			throw new Error("Error al borrar usuario");
+		}
+	}
 }
-
 export default UserController;

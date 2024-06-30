@@ -1,0 +1,35 @@
+<h1>Panel de Usuarios</h1>
+
+{{#each users}}
+<div>
+  <h3 class="fullname">{{this.firstname}} {{this.lastname}}</h3>
+  <p>{{this.email}}</p>
+  <p>{{this.rol}}</p>
+  <button type="submit" class="borrar-usuario-btn" data-user-id="{{this._id}}" >Borrar Usuario</button>
+</div>
+{{/each}}
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+  const borrarButtons = document.querySelectorAll('.borrar-usuario-btn');
+
+  borrarButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      const userId = this.getAttribute('data-user-id');
+      const userFullName = this.parentElement.querySelector('.fullname').innerText;
+      fetch(`/users/delete/${userId}`, {
+        method: 'DELETE'
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {alert(`Usuario ${userFullName} eliminado`)
+      window.location.reload(); })
+      .catch(error => console.error('Error:', error));
+    });
+  });
+});
+</script>
