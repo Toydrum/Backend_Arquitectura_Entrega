@@ -119,8 +119,14 @@ class UserRepository {
 	async deleteUserById(id) {
 		try {
 			const user =
+			await UserModel.findById(id);
+			if (!user) {
+				throw new Error("no user found");
+			}
+			await cartsRepository.eraseCart(user.cart);
 			await UserModel.findByIdAndDelete(id);
-			return user;
+
+			return "Usuario eliminado";
 
 
 			

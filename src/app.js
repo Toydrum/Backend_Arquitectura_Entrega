@@ -35,7 +35,7 @@ const specs = swaggerJSDoc(swaggerOptions);
 //middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use("/", express.static("./src/public"));
+app.use(express.static('public')); 
 app.use("/docs", swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
 app.use(cookieParser());
 app.use(passport.initialize());

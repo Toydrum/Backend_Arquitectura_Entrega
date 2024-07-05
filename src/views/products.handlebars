@@ -1,12 +1,23 @@
 <h1>Products</h1>
 
-<ul>
+<h3><a href="">Comprar Artículos</a></h3>
+
+
+
   {{#each products}}
-  <li><h3>{{this.title}}</h3></li>
+<div>
+  <h3>{{this.title}}</h3>
   <p>{{this.description}}</p>
-  <p>{{this.owner}}</p>
+  <p>${{this.price}}</p>
+ 
+  
+  <button type="submit" class="agregar-producto-btn" data-product-id="{{this._id}}" data-userCart-id="{{../userCart}}">Agregar a Carrito</button>
+</div>
   {{/each}}
-</ul>
+
+  <a href="/views/products">Agrega Producto</a>
+  <br/>
+  <br/>
 
 {{#if hasPrevPage}}
 <a href="/products?page={{prevPage}}">Anterior</a>
@@ -20,3 +31,5 @@
 
 
 <p>{{currentPage}} de {{totalPages}}</p>
+
+<script src="./cartManager.js"></script>

@@ -24,13 +24,16 @@ class CartController {
 	}
 
 	async addProductToCart(req, res) {
-		const cartId = req.params.cid;
-		const productId = req.params.pid;
-		const quantity = req.body.quantity || 1;
 		try {
-			await cartRepository.addProductToCart(cartId, productId, quantity);
-			res.send("Producto agregado");
+			const cartId = req.params.cid;
+			const productId = req.params.pid;
+			const body = req.body
+			
+			const cart = await cartRepository.addProductToCart(cartId, productId, body);
+			await console.log(cart);
+			res.json(cart);
 		} catch (error) {
+			
 			res.status(500).send("error al agregar producto");
 		}
 	}

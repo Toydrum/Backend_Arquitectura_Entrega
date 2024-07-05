@@ -238,9 +238,10 @@ class UserController {
 			const emailManager = new EmailManager();
 			await emailManager.sendEmail(user.email, user.firstname+user.lastname, "Esperamos verte pronto");
 			const deletedUser = await userRepository.deleteUserById(uid);
-			res.status(200).send(deletedUser);
+			res.status(200).send(deletedUser); 
 			return deletedUser;
 		} catch (error) {
+			console.log(error);
 			throw new Error("Error al borrar usuario");
 		}
 	}

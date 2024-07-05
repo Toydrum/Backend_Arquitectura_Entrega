@@ -1,8 +1,8 @@
+import { es, th } from "@faker-js/faker";
 import CartModel from "../models/cart.model.js";
-import ProductModel from "../models/product.model.js";
+
 import TicketModel from "../models/ticket.model.js";
 import ProductsRepository from "./products.repository.js";
-const productsRepository = new ProductsRepository();
 
 class CartsRepository {
 	async createCart() {
@@ -18,7 +18,7 @@ class CartsRepository {
 	async getCartById(cid) {
 		try {
 			const cart = await CartModel.findById(cid);
-			
+
 			if (!cart) {
 				console.log("No cart with that id");
 				return null;
@@ -40,23 +40,27 @@ class CartsRepository {
 		} catch (error) {}
 	}
 
-	async addProductToCart(cartId, productId, quantity = 1) {
+	async addProductToCart(cartId, productId, body) {
 		try {
 			const cart = await this.getProductsFromCart(cartId);
 			const existeProducto = cart.products.find(
 				(item) => item.product._id.toString() === productId
 			);
-
+			
 			if (existeProducto) {
-				existeProducto.quantity += quantity;
+
+				const update = await this.updateProductAmountInCart(existeProducto.product._id.toString(), cart, body);
+				
+				
 			} else {
-				cart.products.push({ product: productId, quantity });
+				cart.products.push({ product: productId.toString(), quantity: body.quantity });
 			}
 			cart.markModified("products");
 			await cart.save();
 			return cart;
 		} catch (error) {
-			throw new Error("Error al agregar producto");
+			console.log(error);
+			throw new Error("Error al agregar producto repository");
 		}
 	}
 
@@ -81,20 +85,16 @@ class CartsRepository {
 		}
 	}
 
-	async updateProductAmountInCart(cid, pid, newQuantity) {
+	async updateProductAmountInCart(pid, cartP, body) {
 		try {
-			const cart = await CartModel.findById(cid);
-
-			if (!cart) {
-				throw new Error("not found");
-			}
-
+			console.log('body', body)
+			const cart = cartP;
 			const productIndex = cart.products.findIndex(
 				(item) => item.product._id.toString() === pid
 			);
 
 			if (productIndex !== -1) {
-				cart.products[productIndex].quantity = newQuantity;
+				cart.products[productIndex] = body;
 
 				cart.markModified("products");
 
@@ -128,6 +128,14 @@ class CartsRepository {
 		}
 	}
 
+	async eraseCart(cid) {
+		try {
+			await CartModel.findByIdAndDelete(cid);
+		} catch (error) {
+			throw new Error("Error deleting cart", error);
+		}
+	}
+
 	async deleteProductFromCart(cid, pid) {
 		try {
 			const cart = await CartModel.findById(cid);
@@ -156,25 +164,24 @@ class CartsRepository {
 				// filtrar los productos que tengan suficiente stock
 				//let quantity = cart.products.quantity;
 				const notInstockProducts = [];
-				const products = cart.products.filter((p)=>{
-					console.log("p:",p)
+				const products = cart.products.filter((p) => {
+					console.log("p:", p);
 					if (p.product.stock >= p.quantity) {
 						return true;
 					} else {
-						notInstockProducts.push(p)
+						notInstockProducts.push(p);
 						return false;
 					}
 				});
-					console.log("not in stock products", notInstockProducts)
-					console.log("products", products)
-					
+				console.log("not in stock products", notInstockProducts);
+				console.log("products", products);
+
 				const total = products.reduce((acum, product) => {
 					let price = product.product.price;
-					let quantity = product.quantity
+					let quantity = product.quantity;
 					console.log(price);
-					if ( quantity > 1) {
+					if (quantity > 1) {
 						price = price * quantity;
-						
 					}
 					return acum + price;
 				}, 0);
@@ -186,16 +193,24 @@ class CartsRepository {
 					purchaser: uid.toString(),
 				});
 				const savedTicket = await ticket.save();
-				if (!savedTicket) throw new Error("No se guardó el ticket")
+				if (!savedTicket) throw new Error("No se guardó el ticket");
 				// guardar el nuevo stock de los productos
-			products.forEach(async (p)=>{
-				p.product.stock = p.product.stock - p.quantity;
-				const productEdited = await productsRepository.updateProduct(p.product._id, p.product);
-				if(!productEdited) throw new Error("no se actualizó el stock del producto" + p.product._id)
-			})
+				products.forEach(async (p) => {
+					const productsRepository = new ProductsRepository();
+					p.product.stock = p.product.stock - p.quantity;
+					const productEdited = await productsRepository.updateProduct(
+						p.product._id,
+						p.product
+					);
+					if (!productEdited)
+						throw new Error(
+							"no se actualizó el stock del producto" + p.product._id
+						);
+				});
 				return {
-			notInstockProducts,
-			savedTicket};
+					notInstockProducts,
+					savedTicket,
+				};
 			}
 		} catch (error) {
 			console.error("Error creating ticket", error);

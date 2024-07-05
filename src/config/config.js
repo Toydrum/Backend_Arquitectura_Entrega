@@ -10,7 +10,8 @@ dotenv.config({
 
 const configObject = {
   //mongo_url: process.env.MONGO_URL,
-  level: process.env.LEVEL
+  level: process.env.LEVEL,
+  pass: process.env.GOOGLE_PASS,
 }
 
 export default configObject;

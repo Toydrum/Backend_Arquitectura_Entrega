@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import configObject from "../config/config.js";
 
 class EmailManager {
 	constructor() {
@@ -6,7 +7,7 @@ class EmailManager {
 			service: "gmail",
 			auth: {
 				user: "hm.covar@gmail.com",
-				pass: GOOGLE_PASS,
+				pass: configObject.pass,
 			},
 			tls: {rejectUnauthorized: false}
 		});
@@ -45,5 +46,20 @@ class EmailManager {
 			console.error("error enviando email",error);
 		}
 	}
+
+	async prodDeleteEmail(email, product, subject) {
+		try {
+			const mailOptions = {
+				from: "Ecommerce <hm.covar@gmail.com>",
+				to: email,
+				subject: subject,
+				html: `lamentamos informarle que el producto ${product} ha sido eliminado`,	
+	
+};
+			await this.transporter.sendMail(mailOptions); 
+	} catch (error) {
+		console.error(error);
+	}
+}
 }
 export default EmailManager;
