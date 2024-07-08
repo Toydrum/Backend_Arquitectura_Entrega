@@ -197,16 +197,18 @@ class CartsRepository {
 				// guardar el nuevo stock de los productos
 				products.forEach(async (p) => {
 					const productsRepository = new ProductsRepository();
+					const { _id, ...rest } = p.product;
 					p.product.stock = p.product.stock - p.quantity;
 					const productEdited = await productsRepository.updateProduct(
 						p.product._id,
-						p.product
+						{ ...rest, stock: p.product.stock}
 					);
 					if (!productEdited)
-						throw new Error(
+						{throw new Error(
 							"no se actualizó el stock del producto" + p.product._id
-						);
+						)} else {console.log("stock actualizado")};
 				});
+				await this.deleteCart(cid);	
 				return {
 					notInstockProducts,
 					savedTicket,

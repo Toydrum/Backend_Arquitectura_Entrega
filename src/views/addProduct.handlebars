@@ -1,0 +1,21 @@
+<h1>Check Out</h1>
+
+<h3>{{user.firstname}} {{user.lastname}}</h3>
+
+<h3>Ticket</h3>
+{{#each cartSel}}
+<div class="total-data" >
+  <h3>{{this.title}}</h3>
+  <p>{{this.description}}</p>
+  <p data-price="{{this.price}}" >$ {{this.price}}</p>
+  <p data-quantity="{{this.quantity}}">Cantidad de producto: {{this.quantity}}</p>
+</div>
+{{/each}}
+
+<h3>Total: ${{total}}</h3>
+<h3><a href="/carts/{{cid}}/purchase/{{user._id}}">Pagar</a></h3>
+
+
+
+
+

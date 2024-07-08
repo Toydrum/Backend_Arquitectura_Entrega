@@ -2,8 +2,10 @@
 import { jwtDecode } from "jwt-decode";
 import ProductModel from "../models/product.model.js";
 import ProductRepository from "../repositories/products.repository.js";
+import CartRepository from "../repositories/carts.repository.js";
 import tokenCreator from "../utils/tokenCreator.js";
 const productRepository = new ProductRepository();
+const cartRepository = new CartRepository();
 
 class ProductController {
 	async getProducts(req, res) {
@@ -14,13 +16,16 @@ class ProductController {
 			console.log(userDecoded);
 			const userCart = userDecoded.cart;
 			
-			const products = await ProductModel.paginate({},{page, limit});
-			//console.log(products);
+			
+			
+			let products = await ProductModel.paginate({},{page, limit});
+			
 			//const productos = await productRepository.all();
 			const finalProducts = products.docs.map(product => {
 				const fProducts = product.toObject();
 				return fProducts;
 			})
+			console.log();
 			res.status(200);
 			res.render("products", {
 				userCart: userCart,

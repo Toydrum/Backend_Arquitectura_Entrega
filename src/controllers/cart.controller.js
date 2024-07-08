@@ -129,6 +129,7 @@ class CartController {
 			if(!ticketInfo){
 				throw new Error("no se guardo bien la info del ticket");
 			}
+			
 			res.status(200);
 			res.render("current", {
 				user: rUser,
@@ -139,7 +140,7 @@ class CartController {
 					return rest;
 					
 				}),
-				ticketInfo: ticketInfo.savedTicket
+				ticketInfo: ticketInfo.savedTicket.toObject()
 			});
 		} catch (error) {
 			console.error(error)

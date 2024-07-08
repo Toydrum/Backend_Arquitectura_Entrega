@@ -9,6 +9,7 @@
   <a href="/views/products">add products</a>
   <a href="">update products</a>
 {{/if}}
+{{#if cartProducts}}
 <ul>
   {{#each cartProducts}}
   <li><h3>{{this.title}}</h3></li>
@@ -19,10 +20,14 @@
   {{/if}}
   {{/each}}
 </ul>
+{{/if}}
 {{#if ticketInfo}}
-  <h3>esta es la info de su compra,{{ticketInfo}}</h3>
+  <h3>esta es la info de su compra</h3>
+  <p>Codigo de Compra: {{ticketInfo.code}}</p>
+  <p>Fecha de Compra: {{ticketInfo.date}}</p>
+  <p>Total: ${{ticketInfo.amount}}</p>
   {{/if}}
-<button ><a href="/carts/{{user.cart._id}}/purchase/{{user._id}}">comprar</a></button>
+
 
 
 

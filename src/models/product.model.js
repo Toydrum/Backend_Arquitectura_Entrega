@@ -36,7 +36,7 @@ const productsSchema = new Schema({
 	owner: {
 		type: Schema.Types.ObjectId,
 		ref: "user",
-		default: 'admin',
+		
 	},
 	thumbnails: {
 		type: [String],

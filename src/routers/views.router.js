@@ -1,9 +1,10 @@
 import express from 'express';
 import ViewsController from '../controllers/views.controller.js';
-
+import {jwtDecode} from 'jwt-decode';
 import generarUProductos from '../utils/faker.js';
 import UserController from '../controllers/user.controller.js';
-const userController = new UserController();
+import CartsRepository from '../repositories/carts.repository.js';
+const cartRepository = new CartsRepository();
 const viewsController = new ViewsController();
 
 
@@ -55,5 +56,35 @@ router.get("/change-password/:token?", (req,res)=>{
   res.render("passwordChange")
 })
 
+router.get("/addProduct", async (req,res)=>{
+  try {
+    const user = req.cookies["coderCookieToken"];
+		const userDecoded = jwtDecode(user);
+    const cartId = userDecoded.cart;
+   
+    const cart = await cartRepository.getCartById(cartId);
+    const cartF = cart.products = cart.products.map(product => {
+      
+     const productN = product.product.toObject();
+     productN.quantity = product.quantity;
+      return productN; 
+    });
+    const suma = cartF.reduce((acum, product) => {
+      return acum + product.price * product.quantity;
+    }, 0);
+   
+   
+    res.render("addProduct",  
+      {
+        user: userDecoded,
+        cartSel: cartF,
+        cid: cartId,
+        total: suma
+      });
+
+  } catch (error) {
+    console.log(error);
+  }
+})  
 
 export default router;

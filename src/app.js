@@ -8,6 +8,7 @@ import manejadorErrores from "./middleware/error.js";
 import addLogger from "./services/loggers/logger.js";
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUiExpress from "swagger-ui-express";
+import path from "path";
 
 //Rutes
 import productsRouter from "./routers/products.router.js";

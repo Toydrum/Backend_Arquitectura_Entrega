@@ -70,13 +70,19 @@ class ProductsRepository {
         }
     }
 
-    async updateProduct(id, productUpdate){
+    async updateProduct(id, updateProduct){
         try {
-            const product = await ProductModel.findByIdAndUpdate(id, productUpdate);
-            await product.save();
-            return product;
+            
+            console.log(updateProduct)
+            const productUpdate = await ProductModel.findByIdAndUpdate(id, updateProduct, { new: true });
+            if (!productUpdate) {
+                throw new Error('Product not found');
+            }
+            await productUpdate.save();
+            return productUpdate;
 
         } catch (error) {
+            console.log(error)
             throw new Error("Error al actualizar el producto");
         }
     }

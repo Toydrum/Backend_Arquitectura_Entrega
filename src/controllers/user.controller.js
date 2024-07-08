@@ -133,7 +133,7 @@ class UserController {
 	async updateUser(req, res) {
 		const updatedUser = req.body;
 		const id = req.params.uid;
-		console.log(updatedUser);
+		//console.log(updatedUser);
 		try {
 			const user = await userRepository.updateUserById(updatedUser, id);
 			res.status(200).json(user);
