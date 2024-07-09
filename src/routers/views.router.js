@@ -63,6 +63,9 @@ router.get("/addProduct", async (req,res)=>{
     const cartId = userDecoded.cart;
    
     const cart = await cartRepository.getCartById(cartId);
+    if(cart.products.length === 0){
+      return res.redirect("/products")
+    }
     const cartF = cart.products = cart.products.map(product => {
       
      const productN = product.product.toObject();

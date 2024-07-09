@@ -7,7 +7,7 @@
 
 {{#if user.credential2}}
   <a href="/views/products">add products</a>
-  <a href="">update products</a>
+  
 {{/if}}
 {{#if cartProducts}}
 <ul>
@@ -18,8 +18,11 @@
   {{#if this.message}}
   <p style="color: red;">{{this.message}}</p>
   {{/if}}
+  
   {{/each}}
 </ul>
+{{else}}
+  <h2>no hay productos en su carrito</h2>
 {{/if}}
 {{#if ticketInfo}}
   <h3>esta es la info de su compra</h3>
@@ -27,8 +30,10 @@
   <p>Fecha de Compra: {{ticketInfo.date}}</p>
   <p>Total: ${{ticketInfo.amount}}</p>
   {{/if}}
+  <h3><a href="/views/addProduct">Comprar Artículos</a></h3>
 
 
 
 
 <a href="/users/logout">Logout</a>
+<a href="/products">Ir a tienda</a>
