@@ -131,12 +131,12 @@ class CartController {
 			}
 			
 			res.status(200);
-			res.render("current", {
+			res.render("ticket", {
 				user: rUser,
 				cartProducts: ticketInfo.notInstockProducts.map((p)=>{
 					p.message = "No hay suficiente stock";
 					const { _v, ...rest } = p.toObject();
-					//console.log(rest)
+					console.log('ticket', rest)
 					return rest;
 					
 				}),

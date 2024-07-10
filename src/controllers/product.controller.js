@@ -13,7 +13,7 @@ class ProductController {
 		try {
 			const user = req.cookies["coderCookieToken"];
 			const userDecoded = jwtDecode(user);
-			console.log(userDecoded);
+			//console.log(userDecoded);
 			const userCart = userDecoded.cart;
 			
 			
@@ -25,7 +25,7 @@ class ProductController {
 				const fProducts = product.toObject();
 				return fProducts;
 			})
-			console.log();
+			//console.log();
 			res.status(200);
 			res.render("products", {
 				userCart: userCart,
@@ -64,7 +64,7 @@ class ProductController {
 			console.log(ownerDec);
 			
 		const created =	await productRepository.createProduct(nuevoProducto);
-		console.log(created)
+		//console.log(created)
 			res.status(200)
 			res.redirect("/products")
 			//res.render("realTimeProducts")

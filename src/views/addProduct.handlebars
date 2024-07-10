@@ -1,20 +1,22 @@
-<h1>Check Out</h1>
-
-<h3>{{user.firstname}} {{user.lastname}}</h3>
-
-<h3>Ticket</h3>
-{{#each cartSel}}
-<div class="total-data" >
-  <h3>{{this.title}}</h3>
-  <p>{{this.description}}</p>
-  <p data-price="{{this.price}}" >$ {{this.price}}</p>
-  <p data-quantity="{{this.quantity}}">Cantidad de producto: {{this.quantity}}</p>
-</div>
-{{/each}}
-
-<h3>Total: ${{total}}</h3>
-<h3><a href="/carts/{{cid}}/purchase/{{user._id}}">Pagar</a></h3>
-
+<section class="bef bef-p-2rem bef-display-flex bef-justifyContent-center bef-alignItems-center bef-flexFlow-column">
+  <h1>Check Out</h1>
+  
+  <h3>{{user.firstname}} {{user.lastname}}</h3>
+  
+  <h3>Ticket</h3>
+  {{#each cartSel}}
+  <div class="total-data bef bef-border-solid__2px__grey bef-p-0_3rem bef-mx-1rem" >
+    <h3 class="bef bef-display-flex bef-justifyContent-center">{{this.title}}</h3>
+    <p class="bef bef-display-flex bef-justifyContent-center">{{this.description}}</p>
+    <p class="bef bef-display-flex bef-justifyContent-center" data-price="{{this.price}}" >$ {{this.price}}</p>
+    <p class="bef bef-display-flex bef-justifyContent-center" data-quantity="{{this.quantity}}">Cantidad de producto: {{this.quantity}}</p>
+  </div>
+  {{/each}}
+  
+  <h3>Total: ${{total}}</h3>
+  <h3 ><a class="bef bef-textDecoration-none" href="/carts/{{cid}}/purchase/{{user._id}}">Pagar</a></h3>
+  
+</section>
 
 
 

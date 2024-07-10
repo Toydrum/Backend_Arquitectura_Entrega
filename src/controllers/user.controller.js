@@ -4,6 +4,7 @@ import generarInfoError from "../services/errors/info.js";
 import tokenCreator from "../utils/tokenCreator.js";
 import EmailManager from "../services/emailManager.js";
 import UserRepository from "../repositories/users.repository.js";
+import CartRepository from "../repositories/carts.repository.js";
 import { cookieExtractor } from "../config/passport.config.js";
 import { jwtDecode } from "jwt-decode";
 import UserModel from "../models/user.model.js";
@@ -59,6 +60,9 @@ class UserController {
 			//console.log(payload);
 			//console.log(id);
 			let user = await userRepository.getUserById(id);
+			let cartRepository = new CartRepository();
+			let reqCart = await cartRepository.getCartById(user.cart);
+			let uCart = reqCart.products;
 
 			if (!user) {
 				throw new Error("no se encontró el usuario");
@@ -72,13 +76,14 @@ class UserController {
 				password: user.password,
 				rol: user.rol,
 				age: user.age,
-				cart: [user.cart].map((c) => {
+				cart: [uCart].map((c) => {
 					const { _v, ...rest } = c.toObject();
 					//console.log(rest)
 					return rest;
-				})[0],
+				}),
 			};
-
+			
+			
 			if (user.rol === "user") {
 				rUser = { ...rUser, credential: true };
 			}
@@ -87,10 +92,10 @@ class UserController {
 				rUser = { ...rUser, credential2: true };
 			}
 
-			const products = user.cart?.products
-				? user.cart.products.map((u) => {
-						const { _v, ...rest } = u.product.toObject();
-						//console.log(rest)
+			const products = uCart
+				? uCart.map((u) => {
+						const { _v, ...rest } = u.toObject();
+						console.log(rest)
 						return rest;
 				})
 				: null;
@@ -99,6 +104,7 @@ class UserController {
 			res.render("current", {
 				user: rUser,
 				cartProducts: products,
+				
 			});
 		} catch (error) {
 			console.error(error);

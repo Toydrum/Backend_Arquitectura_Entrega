@@ -1,4 +1,6 @@
 import express from "express";
+import { createServer } from "http";
+import { Server } from "socket.io";
 import database from "./database.js";
 import { engine } from "express-handlebars";
 import cookieParser from "cookie-parser";
@@ -17,6 +19,8 @@ import usersRouter from "./routers/users.router.js";
 import viewsRouter from "./routers/views.router.js";
 
 const app = express();
+const httpServer = createServer(app);
+const io = new Server(httpServer);
 
 const swaggerOptions = {
 	definition: {
@@ -57,6 +61,6 @@ app.use("/views", viewsRouter);
 //middleware para errores
 app.use(manejadorErrores);
 
-const httpServer = app.listen(8080, () => {
+httpServer.listen(8080, () => {
 	console.log("Escuchando al puerto 8080");
 });

@@ -1,39 +1,42 @@
-<h1>bienvenido: {{user.firstname}} {{user.lastname}}</h1>
-<h4>Rol: {{user.rol}}</h4>
-{{#if user.credential}}
-  <button><a href="">chat</a></button>
-  <button><a href="/products">store</a></button>
-{{/if}}
-
-{{#if user.credential2}}
-  <a href="/views/products">add products</a>
-  
-{{/if}}
-{{#if cartProducts}}
-<ul>
-  {{#each cartProducts}}
-  <li><h3>{{this.title}}</h3></li>
-  <p>{{this.description}}</p>
-  <button>Eliminate</button> 
-  {{#if this.message}}
-  <p style="color: red;">{{this.message}}</p>
+<section class="bef bef-p-3rem">
+  <h1 class="bef bef-display-flex bef-justifyContent-center">Bienvenido: {{user.firstname}} {{user.lastname}}</h1>
+  <h4 class="bef bef-display-flex bef-justifyContent-center">Rol: {{user.rol}}</h4>
+  {{#if user.credential}}
+    <button><a href="">chat</a></button>
+    <button><a href="/products">store</a></button>
   {{/if}}
   
-  {{/each}}
-</ul>
-{{else}}
-  <h2>no hay productos en su carrito</h2>
-{{/if}}
-{{#if ticketInfo}}
-  <h3>esta es la info de su compra</h3>
-  <p>Codigo de Compra: {{ticketInfo.code}}</p>
-  <p>Fecha de Compra: {{ticketInfo.date}}</p>
-  <p>Total: ${{ticketInfo.amount}}</p>
+  {{#if user.credential2}}
+    <span class="bef  bef-display-flex bef-justifyContent-center "><a class="bef bef-p-0_3rem bef-border-solid__2px__grey bef-textDecoration-none bef-color-white bef-bg-orange" href="/views/products">Agregar productos</a></span>
+  
   {{/if}}
-  <h3><a href="/views/addProduct">Comprar Artículos</a></h3>
+  <div class="bef bef-display-flex bef-justifyContent-center bef-flexWrap-wrap bef-mt-1rem">
+    {{#if cartProducts}}
+      {{#each cartProducts}}
+    <div class="bef bef-display-flex bef-mx-1rem bef-w-7rem bef-p-0_6rem bef-border-solid__2px__grey bef-justifyContent-center bef-alignItems-center bef-flexFlow-column">
+      <h3 class="bef bef-m-0">{{this.product.title}}</h3>
+      <p>{{this.product.description}}</p>
+      <p>Cantidad: {{this.quantity}}</p>
+      <button data-product-id="{{this._id}}">Eliminar</button>
+      {{#if this.message}}
+      <p style="color: red;">{{this.message}}</p>
+      {{/if}}
+    </div>
+      {{/each}}
+    {{else}}
+      <h2 class="bef bef-display-flex bef-justifyContent-center">no hay productos en su carrito</h2>
+    {{/if}}
+    
+  </div>
+  
+  
+  
+  
+    <h3 class="bef bef-display-flex bef-justifyContent-center"><a class="bef bef bef-p-0_3rem bef-border-solid__2px__grey bef-textDecoration-none bef-color-white bef-bg-orange" href="/views/addProduct">Comprar Artículos</a></h3>
+  <div class="bef bef-display-flex bef-justifyContent-center">
+    <a class="bef bef-p-0_3rem bef-border-solid__2px__grey bef-textDecoration-none bef-color-white ef-color-white bef-bg-orange" href="/users/logout">Logout</a>
+    <div class="bef bef-w-5per"></div>
+    <a class="bef bef-p-0_3rem bef-border-solid__2px__grey bef-textDecoration-none bef-color-white ef-color-white bef-bg-orange" href="/products">Ir a tienda</a>
+  </div>
+</section>
 
-
-
-
-<a href="/users/logout">Logout</a>
-<a href="/products">Ir a tienda</a>

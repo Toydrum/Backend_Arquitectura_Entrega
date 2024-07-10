@@ -1,38 +1,40 @@
-<h1>Products</h1>
-
-<h3><a href="/views/addProduct">Comprar Artículos</a></h3>
-<h3><a href="/users/current">Ir a Carrito</a></h3>
-
-
-  {{#each products}}
-<div>
-  <h3>{{this.title}}</h3>
-  <p>{{this.description}}</p>
-  <p>${{this.price}}</p>
- 
+<section class="bef bef-p-2rem bef-display-flex bef-justifyContent-center bef-alignItems-center bef-flexFlow-column">
+  <h1>Products</h1>
   
-  <button type="submit" class="agregar-producto-btn" data-product-id="{{this._id}}" data-userCart-id="{{../userCart}}">Agregar a Carrito</button>
-</div>
-  {{/each}}
+  <h3><a class="bef bef-p-0_3rem bef-border-solid__2px__grey bef-textDecoration-none bef-color-white bef-bg-orange" href="/views/addProduct">Comprar Artículos</a></h3>
+  <h3><a class="bef bef-p-0_3rem bef-border-solid__2px__grey bef-textDecoration-none bef-color-white bef-bg-orange" href="/users/current">Ir a Carrito</a></h3>
+  
+  <div class="bef bef-display-flex bef-flexWrap-wrap bef-my-1rem">
+    
+      {{#each products}}
+    <div class="bef bef-border-solid__2px__grey bef-p-0_3rem bef-mx-1rem">
+      <h3 class="bef bef-display-flex bef-justifyContent-center">{{this.title}}</h3>
+      <p class="bef bef-display-flex bef-justifyContent-center">{{this.description}}</p>
+      <p class="bef bef-display-flex bef-justifyContent-center">${{this.price}}</p>
+    
+    
+      <button type="submit" class="agregar-producto-btn" data-product-id="{{this._id}}" data-userCart-id="{{../userCart}}">Agregar a Carrito</button>
+    </div>
+      {{/each}}
+    
+  </div>
 
-<br/>
-  <br/>
+  
+    <a class="bef bef-p-0_3rem bef-border-solid__2px__grey bef-textDecoration-none bef-color-white bef-bg-orange" href="/views/products">Agrega un Producto</a>
 
-  <a href="/views/products">Agrega un Producto</a>
-  <br/>
-  <br/>
-
-{{#if hasPrevPage}}
-<a href="/products?page={{prevPage}}">Anterior</a>
-{{/if}}
-
-
-{{#if hasNextPage}}
-<a href="/products?page={{nextPage}}">Siguiente</a>
-{{/if}}
-
-
-
-<p>{{currentPage}} de {{totalPages}}</p>
+  
+  {{#if hasPrevPage}}
+  <a href="/products?page={{prevPage}}">Anterior</a>
+  {{/if}}
+  
+  
+  {{#if hasNextPage}}
+  <a href="/products?page={{nextPage}}">Siguiente</a>
+  {{/if}}
+  
+  
+  
+  <p>{{currentPage}} de {{totalPages}}</p>
+</section>
 
 <script src="./cartManager.js"></script>

@@ -179,7 +179,7 @@ class CartsRepository {
 				const total = products.reduce((acum, product) => {
 					let price = product.product.price;
 					let quantity = product.quantity;
-					console.log(price);
+					console.log('price',price);
 					if (quantity > 1) {
 						price = price * quantity;
 					}

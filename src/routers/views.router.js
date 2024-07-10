@@ -56,6 +56,7 @@ router.get("/change-password/:token?", (req,res)=>{
   res.render("passwordChange")
 })
 
+
 router.get("/addProduct", async (req,res)=>{
   try {
     const user = req.cookies["coderCookieToken"];
